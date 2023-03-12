@@ -1,0 +1,48 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    background-color: #0d0d0d;
+    color: white;
+}
+
+#chat-log{
+    border: solid 1px red;
+    width: 80vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.general{
+    color: white;
+}
+
+.recrutement{
+    color: #e4a0b8;
+}
+
+.commerce{
+    color: #b3783e;
+}
+
+.communaute{
+    color: #9ec772;
+}
+
+.info{
+    color: #D4AF37;
+}
+
+.combat{
+    color: rgb(204, 44, 44);
+}
+
+#mainchat{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
