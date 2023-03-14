@@ -46,3 +46,8 @@ body{
     flex-direction: column;
     justify-content: center;
 }
+
+.user{
+    cursor: pointer;
+    font-weight: bold;
+}

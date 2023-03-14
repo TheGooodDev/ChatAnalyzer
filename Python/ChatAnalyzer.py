@@ -79,7 +79,7 @@ def update_screen():
             #         line.lstrip().split(" ", 1)[0])))
             chat_log_json = json.dumps(
                 [msg.to_dict() for msg in ChatLog])
-            with open('chatLog.txt', 'w') as f:
+            with open('chatLog.json', 'w') as f:
                 f.write(chat_log_json)
 
             # Show area
@@ -120,9 +120,9 @@ def list_to_message(s):
                 time = datetime.strptime(line[:10], "[%H:%M:%S]").time()
             except:
                 return
-            if (ChatLog):
+            if ChatLog:
                 if (time < ChatLog[len(ChatLog)-1].time):
-                    return
+                    continue
             line = re.sub("[\[]\d\d.\d\d.\d\d[\]]", "", line)
             pattern = line.lstrip().split(" ", 1)[0]
             categorie = return_categorie(pattern)
@@ -132,10 +132,16 @@ def list_to_message(s):
             else:
                 line = line.replace(line.lstrip().split(" ", 1)[0], "")
             name = line.lstrip().split(" ", 1)[0]
+            if ChatLog:
+                if len(ChatLog) > 2:
+                        if ((name == ChatLog[len(ChatLog)-1].user and categorie == ChatLog[len(ChatLog)-1].type) or( name == ChatLog[len(ChatLog)-2].user and categorie == ChatLog[len(ChatLog)-2].type)):
+                            continue
             line = line.replace(line.lstrip().split(" ", 1)[0], "")
             content = ' '.join(line.split())
             message = Message(name, time, content, categorie)
-            ChatLog.append(message)
+            if content:
+                ChatLog.append(message)
+                
 
 
 def background_screenshot(hwnd, width, height):
