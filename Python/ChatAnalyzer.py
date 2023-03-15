@@ -132,16 +132,20 @@ def list_to_message(s):
             else:
                 line = line.replace(line.lstrip().split(" ", 1)[0], "")
             name = line.lstrip().split(" ", 1)[0]
+            valide = True
             if ChatLog:
-                if len(ChatLog) > 2:
-                        if ((name == ChatLog[len(ChatLog)-1].user and categorie == ChatLog[len(ChatLog)-1].type) or( name == ChatLog[len(ChatLog)-2].user and categorie == ChatLog[len(ChatLog)-2].type)):
-                            continue
+                for checkMessage in reversed(ChatLog):
+                    if time < checkMessage.time:
+                        break
+                    if len(ChatLog) > 2:
+                        if (name == checkMessage.user and categorie == checkMessage.type):
+                            valide = False
+                            break
             line = line.replace(line.lstrip().split(" ", 1)[0], "")
             content = ' '.join(line.split())
             message = Message(name, time, content, categorie)
-            if content:
+            if content and valide:
                 ChatLog.append(message)
-                
 
 
 def background_screenshot(hwnd, width, height):
