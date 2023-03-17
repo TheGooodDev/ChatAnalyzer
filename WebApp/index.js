@@ -9,7 +9,7 @@ let searchInput = document.querySelector("#search");
 let lastlength = 0
 
 function getApi() {
-    fetch("http://127.0.0.1:8000")
+    fetch("http://localhost:8000")
         .then((response) => {
             // Check if the response was successful
             if (response.ok) {
@@ -35,37 +35,43 @@ function getApi() {
 setInterval(getApi, 100)
 
 
-function display(res){
+function display(res) {
     cleanChat()
-    for (let i = 0; i < res.length;i++){
+    let count = 0
+    for (let i = 0; i < res.length; i++) {
         let span_message = document.createElement("span");
         span_message.classList.toggle(res[i].type);
 
         let span_time = document.createElement("span")
         span_time.classList.toggle("time");
-        span_time.innerHTML =`[${res[i].time}] `
+        span_time.innerHTML = `[${res[i].time}] (${res[i].type})`
         span_message.appendChild(span_time)
 
         let span_user = document.createElement("span")
         span_user.classList.toggle("user");
-        span_user.addEventListener("click",()=>{
+        span_user.addEventListener("click", () => {
             navigator.clipboard.writeText(`/w ${res[i].user}`)
         })
-        span_user.innerHTML =`${res[i].user} `
+        span_user.innerHTML = `${res[i].user} `
         span_message.appendChild(span_user)
 
-        if(res[i].content.toLowerCase().includes(searchInput.value.toLowerCase()) && searchInput.value){
-            let span_content1 = document.createElement("span")
-            span_content1.classList.toggle("content");
-            let searchWord = document.createElement("span")
-            searchWord.classList.toggle("searchWord");
-            let span_content2 = document.createElement("span")
-            span_content2.classList.toggle("content");
-        }else{
-            let span_content = document.createElement("span")
-            span_content.classList.toggle("content");
-            span_content.innerHTML =`${res[i].content}`
-            span_message.appendChild(span_content)
+        if (res[i].content.toLowerCase().includes(searchInput.value.toLowerCase()) && searchInput.value) {
+            const re = new RegExp(`${searchInput.value}`,"gi")
+            let tab = res[i].content.split(re)
+            tab.forEach(function (sentence, idx) {
+                span_message.appendChild(createMessageSpan(sentence))
+                if (idx != tab.length - 1) {
+                    count++
+                    displayCount(count)
+                    let searchWord = document.createElement("span")
+                    searchWord.classList.toggle("searchWord");
+                    searchWord.innerHTML = searchInput.value
+                    span_message.appendChild(searchWord)
+                }
+            })
+        } else {
+            displayCount(count)
+            span_message.appendChild(createMessageSpan(res[i].content))
         }
 
         p.insertBefore(span_message, p.firstChild);
@@ -73,7 +79,19 @@ function display(res){
     lastlength = res.length
 }
 
-function cleanChat(){
+function createMessageSpan(content){
+    let span_content = document.createElement("span")
+    span_content.classList.toggle("content");
+    span_content.innerHTML = content
+    return span_content
+
+}
+
+function displayCount(count){
+    document.querySelector("#count").innerHTML = count
+}
+
+function cleanChat() {
     while (p.firstChild) {
         p.removeChild(p.lastChild);
     }

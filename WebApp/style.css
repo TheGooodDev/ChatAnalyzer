@@ -41,6 +41,10 @@ body{
     color: rgb(204, 44, 44);
 }
 
+.prive{
+    color: #7ec3ff;
+}
+
 #mainchat{
     display: flex;
     flex-direction: column;
@@ -50,4 +54,8 @@ body{
 .user{
     cursor: pointer;
     font-weight: bold;
+}
+
+.searchWord{
+    background-color: white;
 }

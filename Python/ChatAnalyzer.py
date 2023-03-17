@@ -15,20 +15,6 @@ import json
 
 window_title = "Dofus Chat - Thegoodguy-[Ilz]"
 
-
-chatColor = {
-    "(/b)": "green",
-    "(/r)": "light_magenta",
-    "(/c": "dark_grey",
-    "de": "light_blue",
-    "(/g)": "magenta",
-    "(/a)": "yellow",
-    "(/p)": "blue",
-    "(/s)": "white",
-    "": "white"
-}
-
-
 class Message:
 
     def __init__(self, User, Time, Content, Type):
@@ -51,8 +37,6 @@ class Message:
 
 ChatLog = []
 
-# TKINTER
-
 
 def update_screen():
 
@@ -72,11 +56,6 @@ def update_screen():
         if text != text1:
             text = text1
             list_to_message(text.split("\n"))
-            # tab = re.sub("[\[]\d\d.\d\d.\d\d[\]]",
-            #              "\n", text.replace("\n", "")).split("\n")
-            # for line in tab:
-            #     print(colored(line, chatColor.get(
-            #         line.lstrip().split(" ", 1)[0])))
             chat_log_json = json.dumps(
                 [msg.to_dict() for msg in ChatLog])
             with open('chatLog.json', 'w') as f:
@@ -100,14 +79,18 @@ def return_categorie(s):
         return "commerce"
     elif "(/r)" in s:
         return "recrutement"
-    elif "de" in s:
-        return "prive"
     elif "(/c" in s:
         return "communaute"
-    elif "(info)" in s:
+    elif "(Info)" in s:
         return "info"
     elif "(Combat)" in s:
         return "combat"
+    elif "de " in s:
+        print(s)
+        return "prive"
+    elif "a " in s:
+        print(s)
+        return "prive"
     else:
         return "general"
 
@@ -131,7 +114,12 @@ def list_to_message(s):
                     line = line.replace(line.lstrip().split(" ", 1)[0], "")
             else:
                 line = line.replace(line.lstrip().split(" ", 1)[0], "")
-            name = line.lstrip().split(" ", 1)[0]
+            if isUser(categorie):
+                name = line.lstrip().split(":", 1)[0]
+            else:
+                name = ""
+
+            name = ' '.join(name.split())
             valide = True
             if ChatLog:
                 for checkMessage in reversed(ChatLog):
@@ -163,6 +151,10 @@ def background_screenshot(hwnd, width, height):
     bitmap_array = np.reshape(bitmap_array, (height, width, 4))[:, :, 2::-1]
     return bitmap_array
 
+def isUser(categorie):
+    return categorie != "combat" and categorie != "info"
 
 if __name__ == "__main__":
     update_screen()
+
+
